@@ -1,3 +1,3 @@
-# lab1
+# lab2
 
 A description of this package.

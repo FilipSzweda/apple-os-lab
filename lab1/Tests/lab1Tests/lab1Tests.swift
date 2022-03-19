@@ -1,7 +1,7 @@
 import XCTest
 import class Foundation.Bundle
 
-final class swift_lab_1Tests: XCTestCase {
+final class lab1Tests: XCTestCase {
     func testExample() throws {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
@@ -15,7 +15,7 @@ final class swift_lab_1Tests: XCTestCase {
         // Mac Catalyst won't have `Process`, but it is supported for executables.
         #if !targetEnvironment(macCatalyst)
 
-        let fooBinary = productsDirectory.appendingPathComponent("swift_lab_1")
+        let fooBinary = productsDirectory.appendingPathComponent("lab1")
 
         let process = Process()
         process.executableURL = fooBinary
