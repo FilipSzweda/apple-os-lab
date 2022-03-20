@@ -127,3 +127,36 @@ for string in stringsArray {
 //     print(countedString.0)
 //     print(countedString.1)
 // }
+
+// Enums
+print("\nEnums 1. (no print)")
+enum Day:Int {
+    case Monday = 1
+    case Tuesday = 2
+    case Wednesday = 3
+    case Thursday = 4
+    case Friday = 5
+    case Saturday = 6
+    case Sunday = 7
+
+    func display() -> () {
+        switch self {
+            case .Monday:
+                print("🤡")
+            case .Tuesday:
+                print("🙃")
+            case .Wednesday:
+                print("🙂")
+            case .Thursday:
+                print("😀")
+            case .Friday:
+                print("😄")
+            case .Saturday:
+                print("😎")
+            case .Sunday:
+                print("😴")
+        }
+    }
+}
+// let day = Day.Saturday
+// day.display()
