@@ -81,6 +81,7 @@ smartBart(n: 11, closure: printMessage)
 print("\nClosures 2. (no print)")
 let numbers = [10, 16, 18, 30, 38, 40, 44, 50]
 let multiplesOfFour = numbers.filter{$0 % 4 == 0}
+// print(multiplesOfFour)
 
 print("\nClosures 3.")
 print(numbers.reduce(0){max($0, $1)})
@@ -95,3 +96,34 @@ let oddNumbers = numbers2.filter{$0 % 2 == 1}
 let squaredOddNumbers = oddNumbers.map{Int(pow(Double($0), 2))}
 let summedSquaredOddNumbers = squaredOddNumbers.reduce(0){$0 + $1}
 print(summedSquaredOddNumbers)
+
+// Tuples
+print("\nTuples 1. (no print)")
+func minmax (a: Int, b: Int) -> (Int, Int) {
+    if a < b {
+        return (a, b)
+    }
+    else {
+        return (b, a)
+    }
+}
+// let tuple = minmax(a: 8, b: 7)
+// print(tuple.0)
+// print(tuple.1)
+
+print("\nTuples 2. (no print)")
+var stringsArray = ["gdansk", "university", "gdansk", "university", "university", "of",  "technology", "technology", "gdansk", "gdansk"]
+var countedStrings:[(String, Int)] = []
+for string in stringsArray {
+    if countedStrings.contains(where: {$0.0 == string}) {
+        let index = countedStrings.firstIndex(where: {$0.0 == string}) ?? 0
+        countedStrings[index].1 += 1
+    }
+    else {
+        countedStrings.append((string, 1))
+    }
+}
+// for countedString in countedStrings {
+//     print(countedString.0)
+//     print(countedString.1)
+// }
