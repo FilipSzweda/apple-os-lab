@@ -63,3 +63,35 @@ func isPrime(a: Int) -> Bool {
 print(isPrime(a: 3))
 print(isPrime(a: 8))
 print(isPrime(a: 13))
+
+// Closures
+print("\nClosures 1.")
+func smartBart(n: Int, closure: () -> ()) {
+    for _ in 1...n {
+        closure()
+    }
+}
+
+var printMessage: () -> () = {
+    print("I will pass this course with best mark, because Swift is great!")
+}
+
+smartBart(n: 11, closure: printMessage)
+
+print("\nClosures 2. (no print)")
+let numbers = [10, 16, 18, 30, 38, 40, 44, 50]
+let multiplesOfFour = numbers.filter{$0 % 4 == 0}
+
+print("\nClosures 3.")
+print(numbers.reduce(0){max($0, $1)})
+
+print("\nClosures 4.")
+var strings = ["Gdansk", "University", "of", "Technology"]
+print(strings.reduce(""){if($0.count > 0) {return $0 + " " + $1} else {return $0 + $1}})
+
+print("\nClosures 5.")
+let numbers2 = [1, 2 ,3 ,4, 5, 6]
+let oddNumbers = numbers2.filter{$0 % 2 == 1}
+let squaredOddNumbers = oddNumbers.map{Int(pow(Double($0), 2))}
+let summedSquaredOddNumbers = squaredOddNumbers.reduce(0){$0 + $1}
+print(summedSquaredOddNumbers)
