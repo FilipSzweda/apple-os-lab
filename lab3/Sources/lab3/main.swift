@@ -20,9 +20,13 @@ struct City {
     var keywords: [String] = []
     var locations: [Location] = []
 
-    func toString() -> String {
+    func toString(simple: Bool) -> String {
         var cityString =    "id: " + String(id) + ", name: " + name + ", description: " + description + ", latitude: "
-                            + String(latitude) + ", longitude: " + String(longitude) + ", keywords: "
+                            + String(latitude) + ", longitude: " + String(longitude)
+        if(simple) {
+            return cityString
+        }
+        cityString += ", keywords: "
         for keyword in keywords {
             cityString += keyword
             if(keyword != keywords[keywords.count - 1]) {
@@ -61,10 +65,10 @@ func calculateDistance(cityA: City, cityB: City) -> Double {
 
 func displayClosestAndFurthest(userLongitude: Double, userLatitude: Double) {
     var closestDistance = Double.infinity
-    var closestCity:City!
+    var closestCity: City!
 
     var furthestDistance = 0.0
-    var furthestCity:City!
+    var furthestCity: City!
 
     for city in cities {
         let distance = sqrt(pow(userLongitude - city.longitude, 2) + pow(userLatitude - city.latitude, 2))
@@ -78,16 +82,16 @@ func displayClosestAndFurthest(userLongitude: Double, userLatitude: Double) {
         }
     }
     
-    print("Closest city to longitude " +  String(userLongitude) + ", latitude: " + String(userLatitude) + ": ")
-    print(closestCity.toString())
+    print("\nClosest city to longitude " +  String(userLongitude) + ", latitude: " + String(userLatitude) + ": ")
+    print("\t" + closestCity.toString(simple: true))
     print("Furthest city to longitude " +  String(userLongitude) + ", latitude: " + String(userLatitude) + ": ")
-    print(furthestCity.toString())
+    print("\t" + furthestCity.toString(simple: true))
 }
 
 func displayTwoFurthest() {
     var furthestDistance = 0.0
-    var furthestCityA:City!
-    var furthestCityB:City!
+    var furthestCityA: City!
+    var furthestCityB: City!
     for testedCityA in cities {
         for testedCityB in cities {
             if(testedCityA.id != testedCityB.id) {
@@ -100,9 +104,43 @@ func displayTwoFurthest() {
             }
         }
     }
-    print("Two furthest cities:")
-    print(furthestCityA.toString())
-    print(furthestCityB.toString())
+    print("\nTwo furthest cities:")
+    print("\t" + furthestCityA.toString(simple: true))
+    print("\t" + furthestCityB.toString(simple: true))
+}
+
+func displayCitiesWith5StarRestaurants() {
+    print("\nCities with 5 star restaurants")
+    for city in cities {
+        for location in city.locations {
+            if(location.type == "restaurant" && location.rating == 5) {
+                print("\t" + city.toString(simple: true))
+                break
+            }
+        }
+    }
+}
+
+func getSortedLocations(cityA: City) -> [Location] {
+    return cityA.locations.sorted{ $0.rating > $1.rating }
+}
+
+func displayCitiesWith5StarLocations() {
+    print("\nCities with 5 star locations:")
+    for city in cities {
+        var locations: [Location] = []
+        for location in city.locations {
+            if(location.rating == 5) {
+                locations.append(location)
+            }
+        }
+        if(locations.count > 0) {
+            print("\tid: " + String(city.id) + ", name: " + city.name + ", number of 5 star locations: " + String(locations.count))
+            for location in locations {
+                print("\t\t" + location.toString())
+            }
+        }
+    }
 }
 
 var cities: [City] = [
@@ -124,23 +162,23 @@ var cities: [City] = [
     locations: [Location(id: 9, type: "museum", name: "MuseumE", rating: 1)]),
     City(id: 8, name: "Stockholm", description: "Seems like a nice place", latitude: 59.20, longitude: 18.04, keywords: ["seaside", "party"],
     locations: [Location(id: 13, type: "restaurant", name: "RestaurantD", rating: 2)]),
-    City(id: 9, name: "Reykjavik", description: "Death Stranding happens here", latitude: 64.08, longitude: -21.56, keywords: ["seaside", "cold"],
+    City(id: 9, name: "Reykjavik", description: "Death Stranding happens here", latitude: 64.08, longitude: -21.56, keywords: ["seaside", "cold climate"],
     locations: [Location(id: 14, type: "museum", name: "MuseumF", rating: 4)]),
     City(id: 10, name: "Boston", description: "A fellow named Jeremy comes from there", latitude: 42.21, longitude: -71.04,  keywords: ["seaside", "sport"],
     locations: [Location(id: 18, type: "restaurant", name: "RestaurantE", rating: 3)]),
     City(id: 11, name: "Seattle", description: "Grunge was born there", latitude: 47.37, longitude: -122.20, keywords: ["seaside", "music"],
     locations: [Location(id: 19, type: "restaurant", name: "RestaurantF", rating: 5)]),
-    City(id: 12, name: "Albuquerque", description: "Something about Breaking Bad", latitude: 35.07, longitude: -106.37, keywords: ["party", "hot"],
+    City(id: 12, name: "Albuquerque", description: "Something about Breaking Bad", latitude: 35.07, longitude: -106.37, keywords: ["party", "hot climate"],
     locations: [Location(id: 20, type: "museum", name: "MuseumG", rating: 2), Location(id: 15, type: "monument", name: "MonumentC", rating: 4)]),
     City(id: 13, name: "Tokyo", description: "Capital of Japan", latitude: 35.41, longitude: 139.42, keywords: ["seaside"],
     locations: [Location(id: 21, type: "pub", name: "PubA", rating: 2)]),
-    City(id: 14, name: "Brasilia", description: "Just like the name of the country", latitude: -15.48, longitude: -47.52, keywords: ["jungle", "hot"],
+    City(id: 14, name: "Brasilia", description: "Just like the name of the country", latitude: -15.48, longitude: -47.52, keywords: ["jungle", "hot climate"],
     locations: [Location(id: 24, type: "museum", name: "MuseumH", rating: 3)]),
-    City(id: 15, name: "Sydney", description: "A lot of spiders there", latitude: -33.52, longitude: 151.13, keywords: ["seaside", "hot", "music"],
+    City(id: 15, name: "Sydney", description: "A lot of spiders there", latitude: -33.52, longitude: 151.13, keywords: ["seaside", "hot climate", "music"],
     locations: [Location(id: 25, type: "museum", name: "MuseumI", rating: 3)]),
-    City(id: 16, name: "Auckland", description: "Kiwis live there", latitude: -36.50, longitude: 174.44, keywords: ["seaside", "hot", "nature"],
+    City(id: 16, name: "Auckland", description: "Kiwis live there", latitude: -36.50, longitude: 174.44, keywords: ["seaside", "hot climate", "nature"],
     locations: [Location(id: 26, type: "museum", name: "MuseumJ", rating: 2)]),
-    City(id: 17, name: "Cape Town", description: "That's in Africa", latitude: -33.56, longitude: 18.25, keywords: ["seaside", "hot"],
+    City(id: 17, name: "Cape Town", description: "That's in Africa", latitude: -33.56, longitude: 18.25, keywords: ["seaside", "hot climate"],
     locations: [Location(id: 27, type: "pub", name: "PubB", rating: 4)]),
     City(id: 18, name: "Buenos Aires", description: "Capital of Argentina", latitude: -34.36, longitude: -58.23, keywords: ["seaside", "sport", "party"],
     locations: [Location(id: 28, type: "pub", name: "PubC", rating: 3), Location(id: 29, type: "pub", name: "PubD", rating: 2), Location(id: 30, type: "monument", name: "MonumentD", rating: 4)]),
@@ -148,19 +186,28 @@ var cities: [City] = [
     locations: [Location(id: 31, type: "museum", name: "MuseumK", rating: 5)]),
 ]
 
-print("Cities with name 'Paris':")
+print("\nCities with name 'Paris':")
 for city in searchByName(cityName: "Paris") {
-    print("\t" + city.toString())
+    print("\t" + city.toString(simple: true))
 }
 
-print("Cities with keyword 'sport':")
+print("\nCities with keyword 'sport':")
 for city in searchByKeyword(cityKeyword: "sport") {
-    print("\t" + city.toString())
+    print("\t" + city.toString(simple: true))
 }
 
-print("Distance between Gdansk and Tokyo:")
+print("\nDistance between Gdansk and Tokyo:")
 print(calculateDistance(cityA: cities[0], cityB: cities[13]))
 
 displayClosestAndFurthest(userLongitude: 0.0, userLatitude: 0.0)
 
 displayTwoFurthest()
+
+displayCitiesWith5StarRestaurants()
+
+print("\nLocations in Buenos Aires sorted by rating:")
+for location in getSortedLocations(cityA: cities[18]) {
+    print("\t" + location.toString())
+}
+
+displayCitiesWith5StarLocations()
