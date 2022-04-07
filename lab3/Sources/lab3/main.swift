@@ -60,7 +60,21 @@ func searchByKeyword(cityKeyword: String) -> [City] {
 }
 
 func calculateDistance(cityA: City, cityB: City) -> Double {
-    return sqrt(pow(cityA.longitude - cityB.longitude, 2) + pow(cityA.latitude - cityB.latitude, 2))
+    let R = 6371.0
+    let dlon = cityB.longitude * .pi / 180 - cityA.longitude * .pi / 180
+    let dlat = cityB.latitude * .pi / 180 - cityA.latitude * .pi / 180
+    let a = pow(sin(dlat / 2), 2) + cos(cityA.latitude) * cos(cityB.latitude) * pow(sin(dlon / 2), 2)
+    let c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    return R * c
+}
+
+func calculateDistance(longitudeA: Double, longitudeB: Double, latitudeA: Double, latitudeB: Double) -> Double {
+    let R = 6371.0
+    let dlon = longitudeB * .pi / 180 - longitudeA * .pi / 180
+    let dlat = latitudeB * .pi / 180 - latitudeA * .pi / 180
+    let a = pow(sin(dlat / 2), 2) + cos(latitudeA) * cos(latitudeB) * pow(sin(dlon / 2), 2)
+    let c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    return R * c
 }
 
 func displayClosestAndFurthest(userLongitude: Double, userLatitude: Double) {
@@ -71,7 +85,7 @@ func displayClosestAndFurthest(userLongitude: Double, userLatitude: Double) {
     var furthestCity: City!
 
     for city in cities {
-        let distance = sqrt(pow(userLongitude - city.longitude, 2) + pow(userLatitude - city.latitude, 2))
+        let distance = calculateDistance(longitudeA: userLongitude, longitudeB: city.longitude, latitudeA: userLatitude, latitudeB: city.latitude)
         if(distance > furthestDistance) {
             furthestDistance = distance
             furthestCity = city
