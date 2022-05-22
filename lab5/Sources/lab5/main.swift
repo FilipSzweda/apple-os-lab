@@ -1,3 +1,5 @@
+import Foundation
+
 class Player {
     var sign: String
     
@@ -7,9 +9,21 @@ class Player {
 }
 
 class TicTacToe {
-    var positions: [[Int]] = [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]]
+    var boardSize: Int
+    var positions: [[Int]] = []
     var humanPlayer: Player = Player(sign: "")
     var aiPlayer: Player = Player(sign: "")
+
+    init(boardSize: Int) {
+        self.boardSize = boardSize
+        for _ in 0..<self.boardSize {
+            var row: [Int] = []
+            for _ in 0..<self.boardSize {
+                row.append(-1)
+            }
+            self.positions.append(row)
+        }
+    }
 
     func addHumanPlayer(humanPlayer: Player) {
         self.humanPlayer = humanPlayer
@@ -20,22 +34,34 @@ class TicTacToe {
     }
 
     func start() {
+        print("")
         while true {
+            let winner = self.checkWinner()
             self.drawBoard()
-            self.humanTakeTurn()
-            self.aiTakeTurn()
-            self.checkWin()
+            if winner == -1 {
+                print("No winners yet")
+            }
+            else if winner == 0 {
+                print("Player won")
+                break
+            }
+            else if winner == 1 {
+                print("AI won")
+                break
+            }
+            self.humanTakesTurn()
+            self.aiTakesTurn()
         }
     }
 
-    func humanTakeTurn() {
-        print("Input position 1 - 9")
+    func humanTakesTurn() {
+        print("Input position 1 - \(Int(pow(Double(self.boardSize), Double(2))))")
         while true {
             if let input = readLine() {
                 if let position = Int(input) {
-                    for row in (0...2).reversed() {
-                        if (position - 1) / 3 >= row {
-                            let col = (position - 1) % 3
+                    for row in (0...(self.boardSize - 1)).reversed() {
+                        if (position - 1) / (self.boardSize) >= row {
+                            let col = (position - 1) % (self.boardSize)
                             if self.positions[row][col] == -1 {
                                 self.positions[row][col] = 0
                                 break
@@ -49,7 +75,7 @@ class TicTacToe {
         }
     }
 
-    func aiTakeTurn() {
+    func aiTakesTurn() {
         print("AI took turn")
         var possiblePositions:[(row: Int, col: Int)] = []
         for row in 0..<self.positions.count {
@@ -63,8 +89,56 @@ class TicTacToe {
         self.positions[possiblePositions[index].0][possiblePositions[index].1] = 1
     }
 
-    func checkWin() {
-        print("No winners yet.")
+    func checkWinner() -> Int {
+        // check rows
+        for row in 0..<positions.count {
+            let number = positions[row][0]
+            var numberCount = 1
+            for col in 1..<positions.count {
+                if positions[row][col] == number {
+                    numberCount += 1
+                }
+            }
+            if number != -1 && numberCount == positions.count {
+                return number
+            }
+        }
+        // check columns
+        for col in 0..<positions.count {
+            let number = positions[0][col]
+            var numberCount = 1
+            for row in 1..<positions.count {
+                if positions[row][col] == number {
+                    numberCount += 1
+                }
+            }
+            if number != -1 && numberCount == positions.count {
+                return number
+            }
+        }
+        // check \ diagonal
+        var number = positions[0][0]
+        var numberCount = 1
+        for diag in 1..<positions.count {
+            if positions[diag][diag] == number {
+                numberCount += 1
+            }
+        }
+        if number != -1 && numberCount == positions.count {
+            return number
+        }
+        // check / diagonal
+        number = positions[positions.count - 1][positions.count - 1]
+        numberCount = 1
+        for diag in (0..<(positions.count - 1)).reversed() {
+            if positions[diag][diag] == number {
+                numberCount += 1
+            }
+        }
+        if number != -1 && numberCount == positions.count {
+            return number
+        }
+        return -1
     }
 
     func drawBoard() {
@@ -81,19 +155,24 @@ class TicTacToe {
                 default:
                     line += "error"
                 }
-                if col != 2 {
+                if col != (self.boardSize - 1) {
                     line += " | "
                 }
             }
             if row != 0 {
-                print("----------")
+                let dashesNumber = 2 + 3 * (self.boardSize - 2) + self.boardSize
+                var divider: String = ""
+                for _ in 0...dashesNumber {
+                    divider += "-"
+                }
+                print(divider)
             }
             print(line)
         }
     }
 }
 
-var game = TicTacToe()
+var game = TicTacToe(boardSize: 5)
 var humanPlayer: Player = Player(sign: "x")
 var aiPlayer: Player = Player(sign: "o")
 game.addHumanPlayer(humanPlayer: humanPlayer)
